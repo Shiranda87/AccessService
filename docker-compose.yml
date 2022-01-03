@@ -1,0 +1,24 @@
+version: "3.1"
+
+services:
+  db:
+    container_name: mongoDB
+    image: mongo:latest
+    restart: always
+    volumes:
+      - ./AccessService/AccessServiceData:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE= AccessServiceDB
+    ports:
+      - 27017:27017
+  server:
+    build:
+      dockerfile: Dockerfile
+      context: ./AccessService
+    ports:
+      - '5000:5000'
+    volumes:
+      - /app/node_modules
+      - ./AccessService:/app
+    depends_on:
+      - db
